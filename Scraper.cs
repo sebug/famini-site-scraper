@@ -58,20 +58,32 @@ public record Scraper(string BaseURL, string Password, string OutputDirectory) {
         var imagesThatWeCanLoad = loggedInDoc.DocumentNode.Descendants("a").Where(a =>
             !String.IsNullOrEmpty(a.GetAttributeValue("data-href", String.Empty))).ToList();
 
-        foreach (var link in imagesThatWeCanLoad) {
-            Console.WriteLine(NiceFileName(link.GetAttributeValue("data-href", String.Empty)));
+        var imagesToLoad = imagesThatWeCanLoad.Select(link => 
+        EnsureNoTransform(link.GetAttributeValue("data-href", String.Empty))
+        );
+
+        if (!Directory.Exists(OutputDirectory)) {
+            Directory.CreateDirectory(OutputDirectory);
         }
 
-        var forNowTen = imagesThatWeCanLoad.Take(10);
-
-        foreach (var link in forNowTen) {
-            await DownloadImage(client, link.GetAttributeValue("data-href", String.Empty));
+        foreach (var path in imagesToLoad) {
+            await DownloadImage(client, path);
         }
-
-        Console.WriteLine(imagesThatWeCanLoad.Count);
     }
 
-    private Regex _fNameRegex = new Regex("image/(?<imageName>[^/]+)/version/(?<versionName>[^/]+)");
+    private string EnsureNoTransform(string path) {
+        if (path.Contains("trans/none")) {
+            return path;
+        }
+        var m = _fNameRegex.Match(path);
+        if (!m.Success) {
+            throw new Exception("Could not match " + path);
+        }
+        return "https://" + m.Groups["cdnPath"].Value + "/app/cms/image/transf/none/path/s5c4ab2d9a0f14b44/image/" +
+            m.Groups["imageName"].Value + "/version/" + m.Groups["versionName"].Value + "/image.jpg";
+    }
+
+    private Regex _fNameRegex = new Regex("https://(?<cdnPath>[^/]+).*image/(?<imageName>[^/]+)/version/(?<versionName>[^/]+)");
 
     private string NiceFileName(string path) {
         var m = _fNameRegex.Match(path);
@@ -84,5 +96,17 @@ public record Scraper(string BaseURL, string Password, string OutputDirectory) {
 
     private async Task DownloadImage(HttpClient client, string path) {
         var content = await client.GetAsync(path);
+
+        string outputPath = Path.Combine(OutputDirectory, NiceFileName(path));
+
+        if (File.Exists(outputPath)) {
+            File.Delete(outputPath);
+        }
+
+        var outputStream = await content.Content.ReadAsStreamAsync();
+
+        using (var fs = File.Create(outputPath)) {
+            await outputStream.CopyToAsync(fs);
+        }
     }
 }
