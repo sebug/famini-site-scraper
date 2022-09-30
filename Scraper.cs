@@ -84,7 +84,5 @@ public record Scraper(string BaseURL, string Password, string OutputDirectory) {
 
     private async Task DownloadImage(HttpClient client, string path) {
         var content = await client.GetAsync(path);
-
-        Console.WriteLine(path + " - " + contentDispositionHeader.FileName);
     }
 }
