@@ -26,4 +26,5 @@ After we have scraped the images, the goal is to store them in Azure Blob Storag
 
 To prepare for this, run the following in Azure Cloud Shell (from your new directory, after having created the initial resource group famini-rg):
 
-    
+    az config set defaults.location=switzerlandnorth
+    az storage account create -n faministorageaccount -g famini-rg --sku Standard_LRS
