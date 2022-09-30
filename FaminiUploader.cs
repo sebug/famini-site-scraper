@@ -1,4 +1,4 @@
-public record FaminiUploader(string BaseDirectory) {
+public record FaminiUploader(string BaseDirectory, string AccountName, string AccountKey) {
     public async Task UploadImages() {
         var files = Directory.EnumerateFiles(BaseDirectory);
 
