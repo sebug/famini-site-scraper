@@ -7,3 +7,6 @@ Codespace secrets to set up:
 
  - FAMINI_URL
  - FAMINI_PASSWORD
+
+The pictures are in a private folder, and furthermore they're scaled automatically, so I wanna get the actual originals, which I can fortunately get
+by following the data-href attribute of the parent link.
