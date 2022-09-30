@@ -13,3 +13,7 @@ by following the data-href attribute of the parent link.
 
 ## Storing the images in blobs
 After we have scraped the images, the goal is to store them in Azure Blob Storage. We use a second class, Azure Blob uploader for that.
+
+To prepare for this, run the following in Azure Cloud Shell:
+
+    
