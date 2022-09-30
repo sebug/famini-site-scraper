@@ -23,3 +23,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: binary-dist
+        path: |
+          bin/Release/net6.0
