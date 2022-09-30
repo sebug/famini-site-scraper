@@ -5,5 +5,5 @@ To make things a bit more interesting, I'm gonna work on this with Github Codesp
 
 Codespace secrets to set up:
 
-    - FAMINI_URL
-    - FAMINI_PASSWORD
+ - FAMINI_URL
+ - FAMINI_PASSWORD
