@@ -10,3 +10,7 @@ var scraper = new Scraper(baseUrl, password, args[0]);
 
 await scraper.Run();
 
+var uploader = new FaminiUploader(args[0]);
+
+await uploader.UploadImages();
+
